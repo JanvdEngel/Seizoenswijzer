@@ -217,6 +217,30 @@
     background:var(--harvest);
     border-color:var(--harvest);
   }
+  .bio-flag{
+    font-size:13px;
+    padding:8px;
+    margin:-8px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    line-height:1;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .bio-note{
+    font-size:11.5px;
+    color:var(--harvest);
+    line-height:1.4;
+    margin:6px 0 0;
+    padding-top:6px;
+    border-top:1px dashed var(--line);
+    display:none;
+  }
+  .card.bio-open .bio-note{ display:block; }
+  .card-top{
     display:flex;
     align-items:baseline;
     justify-content:space-between;
@@ -227,6 +251,15 @@
     font-weight:600;
     font-size:15px;
     margin:0;
+    display:flex;
+    align-items:center;
+    flex-wrap:nowrap;
+    gap:2px;
+  }
+  .name-text{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
   }
   .card .item-price{
     font-family:'Space Mono', monospace;
@@ -306,13 +339,18 @@
   </section>
 
   <footer>
-    Gebaseerd op de Nederlandse seizoenskalender (volle grond / onverwarmde teelt).<br>
-    Prijzen zijn indicatieve richtprijzen (gemiddeld beeld), geen live supermarktdata.
+    Seizoensdata samengesteld op basis van de klassieke NL-seizoenslogica (volle grond / plastic tunnel / onverwarmde kas), zoals gehanteerd door Milieu Centraal en het Voedingscentrum — geen live databron.<br>
+    Richtprijzen zijn een eigen inschatting op basis van gangbare supermarktprijzen, niet gescraped of live.<br>
+    🧴 = gemiddeld meer bestrijdingsmiddelen aangetroffen, op basis van de PesticidenEetwijzer van PAN-NL (NVWA-data 2022–2024).
   </footer>
 
 </div>
 
 <script>
+// Op basis van PAN-NL PesticidenEetwijzer (NVWA-data 2022-2024): deze soorten
+// hebben gemiddeld duidelijk meer verschillende bestrijdingsmiddelen dan de rest.
+const bioAdvies = new Set(["Appel", "Aardbei", "Kropsla", "Paprika", "Druif"]);
+
 const maanden = [
   "Januari","Februari","Maart","April","Mei","Juni",
   "Juli","Augustus","September","Oktober","November","December"
@@ -366,12 +404,16 @@ function buildCards(list, grid){
     const c = document.createElement('div');
     c.className = 'card';
     c.style.animationDelay = (i * 0.03) + 's';
+    const bioIcon = bioAdvies.has(name)
+      ? `<button class="bio-flag" type="button" aria-label="Waarom dit icoon?">🧴</button>`
+      : '';
     c.innerHTML = `
       <div class="card-top">
-        <p class="item-name">${name}</p>
+        <p class="item-name"><span class="name-text">${name}</span>${bioIcon}</p>
         <span class="item-price">${price}</span>
       </div>
-      <p class="item-tip">${tip}</p>`;
+      <p class="item-tip">${tip}</p>
+      <p class="bio-note">Gemiddeld meer bestrijdingsmiddelen aangetroffen (PAN-NL) — bio is hier het overwegen waard.</p>`;
     grid.appendChild(c);
   });
 }
@@ -421,6 +463,13 @@ document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
     activeFilter = btn.dataset.filter;
     render();
   });
+});
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.bio-flag');
+  if (btn){
+    btn.closest('.card').classList.toggle('bio-open');
+  }
 });
 
 document.getElementById('priceToggle').addEventListener('click', (e) => {
