@@ -23,6 +23,7 @@
     color:var(--text);
     font-family:'IBM Plex Sans', sans-serif;
     min-height:100vh;
+    overflow-x:hidden;
     -webkit-font-smoothing:antialiased;
   }
   .wrap{
@@ -136,6 +137,7 @@
   /* Filter */
   .filters{
     display:flex;
+    flex-wrap:wrap;
     justify-content:center;
     gap:8px;
     margin-bottom:28px;
@@ -152,6 +154,8 @@
     border-radius:20px;
     cursor:pointer;
     transition:all .15s;
+    white-space:nowrap;
+    flex-shrink:0;
   }
   .filter-btn.active{
     color:var(--bg);
@@ -187,7 +191,7 @@
 
   .grid{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
+    grid-template-columns:repeat(2, minmax(0, 1fr));
     gap:10px;
   }
   .card{
@@ -198,6 +202,7 @@
     transition:border-color .2s, transform .2s;
     opacity:0;
     animation:rise .4s ease forwards;
+    min-width:0;
   }
   .card:hover{ border-color:var(--leaf); }
   .filter-divider{
@@ -209,8 +214,7 @@
     transition:opacity .15s;
   }
   body.hide-prices .item-price{
-    opacity:0;
-    visibility:hidden;
+    display:none;
   }
   #priceToggle.active{
     color:var(--bg);
@@ -240,33 +244,21 @@
     display:none;
   }
   .card.bio-open .bio-note{ display:block; }
-  .card-top{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    gap:8px;
-    margin-bottom:4px;
-  }
   .card .item-name{
     font-weight:600;
     font-size:15px;
-    margin:0;
-    display:flex;
-    align-items:center;
-    flex-wrap:nowrap;
-    gap:2px;
+    margin:0 0 2px;
+    line-height:1.25;
   }
   .name-text{
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
+    word-break:break-word;
   }
   .card .item-price{
+    display:block;
     font-family:'Space Mono', monospace;
     font-size:11px;
     color:var(--harvest);
-    white-space:nowrap;
-    flex-shrink:0;
+    margin:0 0 6px;
   }
   .card .item-tip{
     font-size:12.5px;
@@ -289,7 +281,7 @@
   }
 
   @media (max-width:480px){
-    .grid{ grid-template-columns:1fr 1fr; gap:8px; }
+    .grid{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px; }
     .month-stamp .name{ font-size:36px; }
   }
 
@@ -408,10 +400,8 @@ function buildCards(list, grid){
       ? `<button class="bio-flag" type="button" aria-label="Waarom dit icoon?">🧴</button>`
       : '';
     c.innerHTML = `
-      <div class="card-top">
-        <p class="item-name"><span class="name-text">${name}</span>${bioIcon}</p>
-        <span class="item-price">${price}</span>
-      </div>
+      <p class="item-name"><span class="name-text">${name}</span>${bioIcon}</p>
+      <span class="item-price">${price}</span>
       <p class="item-tip">${tip}</p>
       <p class="bio-note">Gemiddeld meer bestrijdingsmiddelen aangetroffen (PAN-NL) — bio is hier het overwegen waard.</p>`;
     grid.appendChild(c);
