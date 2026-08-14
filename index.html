@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1b1a15">
 <title>Seizoenswijzer</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -352,7 +357,7 @@
 <script>
 // Op basis van PAN-NL PesticidenEetwijzer (NVWA-data 2022-2024): deze soorten
 // hebben gemiddeld duidelijk meer verschillende bestrijdingsmiddelen dan de rest.
-const bioAdvies = new Set(["Appel", "Aardbei", "Kropsla", "Paprika", "Druif"]);
+const bioAdvies = new Set(["Appel", "Aardbei", "Kropsla", "Paprika", "Druif", "Kersen", "Peer"]);
 
 const maanden = [
   "Januari","Februari","Maart","April","Mei","Juni",
@@ -482,6 +487,9 @@ document.body.classList.add('hide-prices');
 
 render();
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>

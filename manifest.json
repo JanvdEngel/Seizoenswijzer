@@ -1,0 +1,13 @@
+{
+  "name": "Seizoenswijzer",
+  "short_name": "Seizoenswijzer",
+  "description": "Welke groente en fruit zijn deze maand vers, ruim verkrijgbaar en het goedkoopst.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1b1a15",
+  "theme_color": "#1b1a15",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
